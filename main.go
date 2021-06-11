@@ -517,6 +517,34 @@ func (d *Dialer) SelectFolder(folder string) (err error) {
 	return nil
 }
 
+func (d *Dialer) SetFlagSeen(uids ...int) error {
+	uidsStr := strings.Builder{}
+	if len(uids) == 0 {
+		uidsStr.WriteString("1:*")
+	} else {
+		for i, u := range uids {
+			if u == 0 {
+				continue
+			}
+
+			if i == 0 {
+				uidsStr.WriteString(strconv.Itoa(u))
+				uidsStr.WriteByte(':')
+			}
+			if i == len(uids)-1 {
+				uidsStr.WriteString(strconv.Itoa(u))
+			}
+		}
+
+	}
+	uidsStr.String()
+	_, err := d.Exec(`STORE `+uidsStr.String()+` +FLAGS (\Seen)`, false, RetryCount, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetUIDs returns the UIDs in the current folder that match the search
 func (d *Dialer) GetUIDs(search string) (uids []int, err error) {
 	uids = make([]int, 0)
