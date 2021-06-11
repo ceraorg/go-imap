@@ -509,7 +509,7 @@ func (d *Dialer) GetTotalEmailCountStartingFromExcluding(startFolder string, exc
 
 // SelectFolder selects a folder
 func (d *Dialer) SelectFolder(folder string) (err error) {
-	_, err = d.Exec(`EXAMINE "`+AddSlashes.Replace(folder)+`"`, true, RetryCount, nil)
+	_, err = d.Exec(`SELECT "`+AddSlashes.Replace(folder)+`"`, true, RetryCount, nil)
 	if err != nil {
 		return
 	}
