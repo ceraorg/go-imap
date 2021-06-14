@@ -80,6 +80,7 @@ type Attachment struct {
 	Name     string
 	MimeType string
 	Content  []byte
+	Size     int
 }
 
 func (e EmailAddresses) String() string {
@@ -676,6 +677,7 @@ func (d *Dialer) GetEmails(uids ...int) (emails map[int]*Email, err error) {
 									Name:     a.FileName,
 									MimeType: a.ContentType,
 									Content:  a.Content,
+									Size:     GetFileSize(a.Content),
 								})
 							}
 						}
@@ -686,6 +688,7 @@ func (d *Dialer) GetEmails(uids ...int) (emails map[int]*Email, err error) {
 									Name:     a.FileName,
 									MimeType: a.ContentType,
 									Content:  a.Content,
+									Size:     GetFileSize(a.Content),
 								})
 							}
 						}
@@ -741,6 +744,11 @@ func (d *Dialer) GetEmails(uids ...int) (emails map[int]*Email, err error) {
 	})
 
 	return
+}
+
+func GetFileSize(array []byte) int {
+	strContent := string(array)
+	return len(strContent)*3/4 - 2
 }
 
 // GetOverviews returns emails without bodies for the given UIDs in the current folder.
