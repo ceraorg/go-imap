@@ -539,7 +539,7 @@ func (d *Dialer) SetFlagSeen(uids ...int) error {
 
 	}
 	uidsStr.String()
-	_, err := d.Exec(`STORE `+uidsStr.String()+` +FLAGS (\Seen)`, false, RetryCount, nil)
+	_, err := d.Exec(`UID STORE `+uidsStr.String()+` FLAGS (\Seen)`, false, RetryCount, nil)
 	if err != nil {
 		return err
 	}
