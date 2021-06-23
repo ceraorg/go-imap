@@ -215,8 +215,10 @@ func New(username string, password string, host string, port int) (d *Dialer, er
 	if err != nil {
 		if Verbose {
 			log(connNum, "", Red(Bold("failed to establish connection")))
-			if d.conn != nil {
-				d.conn.Close()
+			if d != nil {
+				if d.conn != nil {
+					d.conn.Close()
+				}
 			}
 		}
 		return nil, err
