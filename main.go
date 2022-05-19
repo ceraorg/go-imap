@@ -557,6 +557,83 @@ func (d *Dialer) SetFlagSeen(uids ...int) error {
 	return nil
 }
 
+// CopyToFolder copies specified mails from the current folder to the named folder
+func (d *Dialer) CopyToFolder(folder string, uids ...int) error {
+	uidsStr := strings.Builder{}
+	if len(uids) == 0 {
+		uidsStr.WriteString("1:*")
+	} else {
+		for i, u := range uids {
+			if u == 0 {
+				continue
+			}
+
+			if i == 0 {
+				uidsStr.WriteString(strconv.Itoa(u))
+				uidsStr.WriteByte(':')
+			}
+			if i == len(uids)-1 {
+				uidsStr.WriteString(strconv.Itoa(u))
+			}
+		}
+
+	}
+	uidsStr.String()
+	_, err := d.Exec(`COPY `+uidsStr.String()+` `+folder, false, RetryCount, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Delete deletes the specified uids from the current folder
+func (d *Dialer) Delete(uids ...int) error {
+	uidsStr := strings.Builder{}
+	if len(uids) == 0 {
+		uidsStr.WriteString("1:*")
+	} else {
+		for i, u := range uids {
+			if u == 0 {
+				continue
+			}
+
+			if i == 0 {
+				uidsStr.WriteString(strconv.Itoa(u))
+				uidsStr.WriteByte(':')
+			}
+			if i == len(uids)-1 {
+				uidsStr.WriteString(strconv.Itoa(u))
+			}
+		}
+
+	}
+	uidsStr.String()
+	_, err := d.Exec(`STORE `+uidsStr.String()+` FLAGS (\Deleted)`, false, RetryCount, nil)
+	if err != nil {
+		return err
+	}
+	_, err = d.Exec(`EXPUNGE`, false, RetryCount, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// MoveToFolder moves messages with provided uids from current folder
+// to the specified folder
+func (d *Dialer) MoveToFolder(folder string, uids ...int) error {
+	err := d.CopyToFolder(folder, uids...)
+	if err != nil {
+		return err
+	}
+
+	err = d.Delete(uids...)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetUIDs returns the UIDs in the current folder that match the search
 func (d *Dialer) GetUIDs(search string) (uids []int, err error) {
 	uids = make([]int, 0)
