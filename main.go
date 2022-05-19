@@ -557,7 +557,7 @@ func (d *Dialer) SetFlagSeen(uids ...int) error {
 	return nil
 }
 
-// CopyToFolder copies specified mails from the current folder to the named folder
+// CopyToFolder copies specified mails from the current folder to the specified folder
 func (d *Dialer) CopyToFolder(folder string, uids ...int) error {
 	uidsStr := strings.Builder{}
 	if len(uids) == 0 {
@@ -619,7 +619,7 @@ func (d *Dialer) Delete(uids ...int) error {
 	return nil
 }
 
-// MoveToFolder moves messages with provided uids from current folder
+// MoveToFolder moves the specified messages from the current folder
 // to the specified folder
 func (d *Dialer) MoveToFolder(folder string, uids ...int) error {
 	err := d.CopyToFolder(folder, uids...)
