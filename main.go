@@ -579,7 +579,7 @@ func (d *Dialer) CopyToFolder(folder string, uids ...int) error {
 
 	}
 	uidsStr.String()
-	_, err := d.Exec(`COPY `+uidsStr.String()+` `+folder, false, RetryCount, nil)
+	_, err := d.Exec(`UID COPY `+uidsStr.String()+` `+folder, false, RetryCount, nil)
 	if err != nil {
 		return err
 	}
@@ -608,7 +608,7 @@ func (d *Dialer) Delete(uids ...int) error {
 
 	}
 	uidsStr.String()
-	_, err := d.Exec(`STORE `+uidsStr.String()+` FLAGS (\Deleted)`, false, RetryCount, nil)
+	_, err := d.Exec(`UID STORE `+uidsStr.String()+` FLAGS (\Deleted)`, false, RetryCount, nil)
 	if err != nil {
 		return err
 	}
