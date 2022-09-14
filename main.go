@@ -166,7 +166,7 @@ func log(connNum int, folder string, msg interface{}) {
 }
 
 // New makes a new imap
-func New(username string, password string, host string, port int) (d *Dialer, err error) {
+func New(username string, password string, host string, port int, insecureSkipVerify bool) (d *Dialer, err error) {
 	nextConnNumMutex.RLock()
 	connNum := nextConnNum
 	nextConnNumMutex.RUnlock()
@@ -180,7 +180,7 @@ func New(username string, password string, host string, port int) (d *Dialer, er
 			log(connNum, "", Green(Bold("establishing connection")))
 		}
 		var conn *tls.Conn
-		conn, err = tls.Dial("tcp", host+":"+strconv.Itoa(port), nil)
+		conn, err = tls.Dial("tcp", host+":"+strconv.Itoa(port), &tls.Config{InsecureSkipVerify: true})
 		if err != nil {
 			if Verbose {
 				log(connNum, "", Red(Bold(fmt.Sprintf("failed to connect: %s", err))))
