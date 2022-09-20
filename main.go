@@ -180,7 +180,7 @@ func New(username string, password string, host string, port int) (d *Dialer, er
 			log(connNum, "", Green(Bold("establishing connection")))
 		}
 		var conn *tls.Conn
-		conn, err = tls.Dial("tcp", host+":"+strconv.Itoa(port))
+		conn, err = tls.Dial("tcp", host+":"+strconv.Itoa(port), nil)
 		if err != nil {
 			if Verbose {
 				log(connNum, "", Red(Bold(fmt.Sprintf("failed to connect: %s", err))))
